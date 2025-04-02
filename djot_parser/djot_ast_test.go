@@ -12,11 +12,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
-	"github.com/sivukhin/godjot/djot_tokenizer"
-	"github.com/sivukhin/godjot/html_writer"
-	"github.com/sivukhin/godjot/tokenizer"
+	"github.com/ratrocket/godjot/djot_tokenizer"
+	"github.com/ratrocket/godjot/html_writer"
+	"github.com/ratrocket/godjot/internal/testx"
+	"github.com/ratrocket/godjot/tokenizer"
 )
 
 func printDjot(text string) string {
@@ -37,9 +36,9 @@ func TestDownloadExample(t *testing.T) {
 	}
 
 	response, err := http.Get("https://raw.githubusercontent.com/jgm/djot/main/doc/syntax.html")
-	require.Nil(t, err)
+	testx.AssertNil(t, "", err)
 	docBytes, err := io.ReadAll(response.Body)
-	require.Nil(t, err)
+	testx.AssertNil(t, "", err)
 	var (
 		djotStartToken = []byte(`<div class="djot">`)
 		htmlStartToken = []byte(`<div class="html">`)
@@ -56,15 +55,15 @@ func TestDownloadExample(t *testing.T) {
 		docBytes = docBytes[djotEnd+len(endToken):]
 
 		htmlStart := bytes.Index(docBytes, htmlStartToken)
-		require.NotEqual(t, htmlStart, -1)
+		testx.AssertNotEqual(t, "", htmlStart, -1)
 		htmlEnd := htmlStart + bytes.Index(docBytes[htmlStart:], endToken)
 		htmlExample := html.UnescapeString(normalize(string(docBytes[htmlStart+len(htmlStartToken) : htmlEnd])))
 		docBytes = docBytes[htmlEnd+len(endToken):]
 
 		// Ignore 64th example because it's not self-contained and requires additional definition of table
 		if example != 64 {
-			require.Nil(t, os.WriteFile(path.Join(examplesDir, fmt.Sprintf("%02d.html", example)), []byte(htmlExample), 0660))
-			require.Nil(t, os.WriteFile(path.Join(examplesDir, fmt.Sprintf("%02d.djot", example)), []byte(djotExample), 0660))
+			testx.AssertNil(t, "", os.WriteFile(path.Join(examplesDir, fmt.Sprintf("%02d.html", example)), []byte(htmlExample), 0660))
+			testx.AssertNil(t, "", os.WriteFile(path.Join(examplesDir, fmt.Sprintf("%02d.djot", example)), []byte(djotExample), 0660))
 		}
 		example++
 	}
@@ -72,7 +71,7 @@ func TestDownloadExample(t *testing.T) {
 
 func TestStartSymbol(t *testing.T) {
 	dir, err := os.ReadDir(examplesDir)
-	require.Nil(t, err)
+	testx.AssertNil(t, "", err)
 	for _, entry := range dir {
 		name := entry.Name()
 		example, ok := strings.CutSuffix(name, ".html")
@@ -80,7 +79,7 @@ func TestStartSymbol(t *testing.T) {
 			continue
 		}
 		djotExample, err := os.ReadFile(path.Join(examplesDir, fmt.Sprintf("%v.djot", example)))
-		require.Nil(t, err)
+		testx.AssertNil(t, "", err)
 		_ = BuildDjotAst(djotExample)
 	}
 	symbols := make([]byte, 0)
@@ -95,7 +94,7 @@ func TestStartSymbol(t *testing.T) {
 
 func TestDjotDocExample(t *testing.T) {
 	dir, err := os.ReadDir(examplesDir)
-	require.Nil(t, err)
+	testx.AssertNil(t, "", err)
 	for _, entry := range dir {
 		name := entry.Name()
 		example, ok := strings.CutSuffix(name, ".html")
@@ -103,16 +102,19 @@ func TestDjotDocExample(t *testing.T) {
 			continue
 		}
 		htmlExample, err := os.ReadFile(path.Join(examplesDir, fmt.Sprintf("%v.html", example)))
-		require.Nil(t, err)
+		testx.AssertNil(t, "", err)
 		djotExample, err := os.ReadFile(path.Join(examplesDir, fmt.Sprintf("%v.djot", example)))
-		require.Nil(t, err)
+		testx.AssertNil(t, "", err)
 		t.Run(example+":"+string(djotExample), func(t *testing.T) {
 			result := printDjot(string(djotExample))
-			require.Equalf(
-				t, string(htmlExample), result,
-				"invalid html (%v != %v), djot tokens: %v",
-				string(htmlExample), result,
-				djot_tokenizer.BuildDjotTokens(djotExample),
+			testx.AssertEqual(
+				t,
+				fmt.Sprintf("invalid html (%v != %v), djot tokens: %v",
+					string(htmlExample),
+					result,
+					djot_tokenizer.BuildDjotTokens(djotExample)),
+				string(htmlExample),
+				result,
 			)
 		})
 	}
@@ -121,12 +123,12 @@ func TestDjotDocExample(t *testing.T) {
 func TestManualExamples(t *testing.T) {
 	t.Run("link in text", func(t *testing.T) {
 		result := printDjot("link http://localhost:3000/debug/pprof/profile?seconds=10 -o profile.pprof")
-		require.Equal(t, "<p>link http://localhost:3000/debug/pprof/profile?seconds=10 -o profile.pprof</p>\n", result)
+		testx.AssertEqual(t, "", "<p>link http://localhost:3000/debug/pprof/profile?seconds=10 -o profile.pprof</p>\n", result)
 	})
 	t.Run("block attributes", func(t *testing.T) {
 		result := printDjot(`{key="value"}
 # Header`)
-		require.Equal(t, `<section id="Header">
+		testx.AssertEqual(t, "", `<section id="Header">
 <h1 key="value">Header</h1>
 </section>
 `, result)

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/sivukhin/godjot/djot_tokenizer"
-	"github.com/sivukhin/godjot/tokenizer"
+	"github.com/ratrocket/godjot/djot_tokenizer"
+	"github.com/ratrocket/godjot/tokenizer"
 )
 
 const (
@@ -732,7 +732,7 @@ func buildDjotAst(
 				if nextI < len(list) {
 					nextToken = list[nextI]
 				}
-				// todo (sivukhin, 2023-11-19): replicate this logic in regular link and make it less awful!
+				// todo (ratrocket, 2023-11-19): replicate this logic in regular link and make it less awful!
 				attributesAfter := 0
 				if nextToken.Type != djot_tokenizer.None {
 					for {

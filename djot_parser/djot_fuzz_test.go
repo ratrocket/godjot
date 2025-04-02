@@ -7,14 +7,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
-	"github.com/sivukhin/godjot/djot_tokenizer"
+	"github.com/ratrocket/godjot/djot_tokenizer"
 )
 
 func seedFuzz(f *testing.F) {
 	dir, err := os.ReadDir(examplesDir)
-	require.Nil(f, err)
+	if err != nil {
+		f.Fatal(err)
+	}
 	for _, entry := range dir {
 		name := entry.Name()
 		example, ok := strings.CutSuffix(name, ".html")
@@ -22,7 +22,9 @@ func seedFuzz(f *testing.F) {
 			continue
 		}
 		djotExample, err := os.ReadFile(path.Join(examplesDir, fmt.Sprintf("%v.djot", example)))
-		require.Nil(f, err)
+		if err != nil {
+			f.Fatal(err)
+		}
 		f.Add(string(djotExample))
 	}
 }

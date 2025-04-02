@@ -3,9 +3,8 @@ package djot_tokenizer
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
-	"github.com/sivukhin/godjot/tokenizer"
+	"github.com/ratrocket/godjot/internal/testx"
+	"github.com/ratrocket/godjot/tokenizer"
 )
 
 func TestQuotedString(t *testing.T) {
@@ -21,9 +20,9 @@ func TestQuotedString(t *testing.T) {
 			t.Run(tt.s, func(t *testing.T) {
 				reader := tokenizer.TextReader(tt.s)
 				value, next, ok := MatchQuotedString(reader, 0)
-				require.True(t, ok)
-				require.Equal(t, len(tt.s), int(next))
-				require.Equal(t, tt.value, value)
+				testx.AssertTrue(t, "", ok)
+				testx.AssertEqual(t, "", len(tt.s), int(next))
+				testx.AssertEqual(t, "", tt.value, value)
 			})
 		}
 	})
@@ -32,7 +31,7 @@ func TestQuotedString(t *testing.T) {
 			t.Run(tt, func(t *testing.T) {
 				reader := tokenizer.TextReader(tt)
 				_, _, ok := MatchQuotedString(reader, 0)
-				require.False(t, ok)
+				testx.AssertFalse(t, "", ok)
 			})
 		}
 	})
@@ -55,9 +54,9 @@ func TestAttributes(t *testing.T) {
 			t.Run(tt.s, func(t *testing.T) {
 				reader := tokenizer.TextReader(tt.s)
 				value, next, ok := MatchDjotAttribute(reader, 0)
-				require.True(t, ok)
-				require.Equal(t, len(tt.s), int(next))
-				require.Equal(t, tt.value, value.GoMap())
+				testx.AssertTrue(t, "", ok)
+				testx.AssertEqual(t, "", len(tt.s), int(next))
+				testx.AssertEqual(t, "", tt.value, value.GoMap())
 			})
 		}
 	})

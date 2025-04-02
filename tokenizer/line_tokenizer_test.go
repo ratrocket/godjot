@@ -3,7 +3,7 @@ package tokenizer
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"github.com/ratrocket/godjot/internal/testx"
 )
 
 func TestLineTokenizer(t *testing.T) {
@@ -11,21 +11,21 @@ func TestLineTokenizer(t *testing.T) {
 	tokenizer := LineTokenizer{Document: document}
 	{
 		start, end, eof := tokenizer.Scan()
-		require.False(t, eof)
-		require.Equal(t, "hello\n", string(document[start:end]))
+		testx.AssertFalse(t, "", eof)
+		testx.AssertEqual(t, "", "hello\n", string(document[start:end]))
 	}
 	{
 		start, end, eof := tokenizer.Scan()
-		require.False(t, eof)
-		require.Equal(t, "world\n", string(document[start:end]))
+		testx.AssertFalse(t, "", eof)
+		testx.AssertEqual(t, "", "world\n", string(document[start:end]))
 	}
 	{
 		start, end, eof := tokenizer.Scan()
-		require.False(t, eof)
-		require.Equal(t, "!", string(document[start:end]))
+		testx.AssertFalse(t, "", eof)
+		testx.AssertEqual(t, "", "!", string(document[start:end]))
 	}
 	{
 		_, _, eof := tokenizer.Scan()
-		require.True(t, eof)
+		testx.AssertTrue(t, "", eof)
 	}
 }

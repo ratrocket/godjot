@@ -3,15 +3,14 @@ package djot_tokenizer
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
-	"github.com/sivukhin/godjot/tokenizer"
+	"github.com/ratrocket/godjot/internal/testx"
+	"github.com/ratrocket/godjot/tokenizer"
 )
 
 func TestSimpleText(t *testing.T) {
 	tokens := BuildDjotTokens([]byte("hello *world*!"))
 	t.Log(tokens)
-	require.Equal(t, tokenizer.TokenList[DjotToken]{
+	testx.AssertEqual(t, "", tokenizer.TokenList[DjotToken]{
 		{Type: DocumentBlock, Start: 0, End: 0, JumpToPair: 8},
 		{Type: ParagraphBlock, Start: 0, End: 0, JumpToPair: 6},
 		{Type: None, Start: 0, End: 6},
@@ -32,7 +31,7 @@ Then we have simple paragraph
 > This is not quote!
 
 > But this is quote with item list
-> 
+>
 > 1. one-line item
 > 2. multi-line
 > item
@@ -45,7 +44,7 @@ Then we have simple paragraph
 
 func TestSimpleLink(t *testing.T) {
 	tokens := BuildDjotTokens([]byte("[a](b)"))
-	require.Equal(t, tokenizer.TokenList[DjotToken]{
+	testx.AssertEqual(t, "", tokenizer.TokenList[DjotToken]{
 		{Type: DocumentBlock, Start: 0, End: 0, JumpToPair: 9},
 		{Type: ParagraphBlock, Start: 0, End: 0, JumpToPair: 7},
 		{Type: SpanInline, Start: 0, End: 1, JumpToPair: 2},
@@ -61,7 +60,7 @@ func TestSimpleLink(t *testing.T) {
 
 func TestSimpleLinkWithNewline(t *testing.T) {
 	tokens := BuildDjotTokens([]byte("[My link text](http://example.com?product_number=234234234234\n234234234234)"))
-	require.Equal(t, tokenizer.TokenList[DjotToken]{
+	testx.AssertEqual(t, "", tokenizer.TokenList[DjotToken]{
 		{Type: DocumentBlock, Start: 0, End: 0, JumpToPair: 11},
 		{Type: ParagraphBlock, Start: 0, End: 0, JumpToPair: 9},
 		{Type: SpanInline, Start: 0, End: 1, JumpToPair: 2},
@@ -79,7 +78,7 @@ func TestSimpleLinkWithNewline(t *testing.T) {
 
 func TestMathVerbatim(t *testing.T) {
 	tokens := BuildDjotTokens([]byte("$$`1+1=2`"))
-	require.Equal(t, tokenizer.TokenList[DjotToken]{
+	testx.AssertEqual(t, "", tokenizer.TokenList[DjotToken]{
 		{Type: DocumentBlock, Start: 0, End: 0, JumpToPair: 6},
 		{Type: ParagraphBlock, Start: 0, End: 0, JumpToPair: 4},
 		{Type: VerbatimInline, Start: 0, End: 3, JumpToPair: 2, Attributes: tokenizer.NewAttributes(tokenizer.AttributeEntry{
@@ -95,7 +94,7 @@ func TestMathVerbatim(t *testing.T) {
 func TestVerbatim(t *testing.T) {
 	tokens := BuildDjotTokens([]byte("``VerbatimInline with a backtick` character``\n`VerbatimInline with three backticks ``` character`"))
 	t.Log(tokens)
-	require.Equal(t, tokenizer.TokenList[DjotToken]{
+	testx.AssertEqual(t, "", tokenizer.TokenList[DjotToken]{
 		{Type: DocumentBlock, Start: 0, End: 0, JumpToPair: 10},
 		{Type: ParagraphBlock, Start: 0, End: 0, JumpToPair: 8},
 		{Type: VerbatimInline, Start: 0, End: 2, JumpToPair: 2},
@@ -112,7 +111,7 @@ func TestVerbatim(t *testing.T) {
 
 func TestNestedEmphasis(t *testing.T) {
 	tokens := BuildDjotTokens([]byte("___abc___"))
-	require.Equal(t, tokenizer.TokenList[DjotToken]{
+	testx.AssertEqual(t, "", tokenizer.TokenList[DjotToken]{
 		{Type: DocumentBlock, Start: 0, End: 0, JumpToPair: 10},
 		{Type: ParagraphBlock, Start: 0, End: 0, JumpToPair: 8},
 		{Type: EmphasisInline, Start: 0, End: 1, JumpToPair: 6},
@@ -129,7 +128,7 @@ func TestNestedEmphasis(t *testing.T) {
 
 func TestUnmatchedEmphasis(t *testing.T) {
 	tokens := BuildDjotTokens([]byte("___ (not an emphasized `_` character)"))
-	require.Equal(t, tokenizer.TokenList[DjotToken]{
+	testx.AssertEqual(t, "", tokenizer.TokenList[DjotToken]{
 		{Type: DocumentBlock, Start: 0, End: 0, JumpToPair: 8},
 		{Type: ParagraphBlock, Start: 0, End: 0, JumpToPair: 6},
 		{Type: None, Start: 0, End: 23},
