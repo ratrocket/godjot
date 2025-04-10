@@ -40,7 +40,8 @@ evaluate if *this* library (rather, my fork of it) is up to the task.
 If not I'll change tack.
 
 I'll (try to, haha) update this README as things change.  *For now* what
-follows is from the original repo (except for `s/sivukhin/ratrocket`).
+follows is from the original repo (except for changing references to the
+module path).
 
 ## Installation
 
