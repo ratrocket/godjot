@@ -1,7 +1,7 @@
-# godjot
+# djot
 
 [Djot](https://github.com/jgm/djot) markup language parser implemented
-in Go language.
+in Go.
 
 ## Note on fork
 
@@ -10,6 +10,13 @@ This is my fork of
 testify, ripped out all the CI stuff, took out something about "idea"
 (an IDE?), altered the Makefile to my liking, etc, etc.  See commit
 0016b84a41c5b3591f9d56e792f318285ed363e7 for my initial changes.
+
+<aside>
+If you've stumbled upon this repo, note that the authoritative version
+is on [sourcehut](https://git.sr.ht/~md0/djot).  The [github
+repo](https://github.com/ratrocket/godjot) is a mirror and may (will)
+lag behind.
+</aside>
 
 I'm evaluating if I can use this library as the basis for my own
 djot'ing.  I've used [jotdown](https://github.com/hellux/jotdown) (also
@@ -38,18 +45,21 @@ follows is from the original repo (except for `s/sivukhin/ratrocket`).
 
 ## Installation
 
-You can install **godjot** as a standalone binary:
+You can install **djot** as a standalone binary:
+
 ```shell
-$> go install github.com/ratrocket/godjot@latest
-$> echo '*Hello*, _world_' | godjot
+$ go install md0.org/djot@latest
+$ echo '*Hello*, _world_' | djot
 <p><strong>Hello</strong>, <em>world</em></p>
 ```
 
 ## Usage
 
-**godjot** provides API to parse AST from djot string
+**djot** provides API to parse AST from djot string
 
 ``` go
+import md0.org/djot
+
 var djot []byte
 ast := djot_parser.BuildDjotAst(djot)
 ```
