@@ -12,10 +12,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ratrocket/godjot/djot_tokenizer"
-	"github.com/ratrocket/godjot/html_writer"
-	"github.com/ratrocket/godjot/internal/testx"
-	"github.com/ratrocket/godjot/tokenizer"
+	"md0.org/djot/djot_tokenizer"
+	"md0.org/djot/html_writer"
+	"md0.org/djot/internal/testx"
+	"md0.org/djot/tokenizer"
 )
 
 func printDjot(text string) string {

@@ -3,8 +3,8 @@ package djot_tokenizer
 import (
 	"testing"
 
-	"github.com/ratrocket/godjot/internal/testx"
-	"github.com/ratrocket/godjot/tokenizer"
+	"md0.org/djot/internal/testx"
+	"md0.org/djot/tokenizer"
 )
 
 func TestQuotedString(t *testing.T) {

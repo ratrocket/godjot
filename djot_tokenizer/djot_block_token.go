@@ -3,7 +3,7 @@ package djot_tokenizer
 import (
 	"bytes"
 
-	"github.com/ratrocket/godjot/tokenizer"
+	"md0.org/djot/tokenizer"
 )
 
 var (

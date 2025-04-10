@@ -3,7 +3,7 @@ package tokenizer
 import (
 	"testing"
 
-	"github.com/ratrocket/godjot/internal/testx"
+	"md0.org/djot/internal/testx"
 )
 
 func TestLineTokenizer(t *testing.T) {

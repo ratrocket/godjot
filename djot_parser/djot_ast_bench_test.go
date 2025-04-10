@@ -7,8 +7,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/ratrocket/godjot/djot_tokenizer"
-	"github.com/ratrocket/godjot/html_writer"
+	"md0.org/djot/djot_tokenizer"
+	"md0.org/djot/html_writer"
 )
 
 //go:embed bench/sample01.djot

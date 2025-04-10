@@ -7,8 +7,8 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/ratrocket/godjot/djot_tokenizer"
-	"github.com/ratrocket/godjot/tokenizer"
+	"md0.org/djot/djot_tokenizer"
+	"md0.org/djot/tokenizer"
 )
 
 const (

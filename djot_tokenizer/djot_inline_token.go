@@ -1,7 +1,7 @@
 package djot_tokenizer
 
 import (
-	"github.com/ratrocket/godjot/tokenizer"
+	"md0.org/djot/tokenizer"
 )
 
 var (

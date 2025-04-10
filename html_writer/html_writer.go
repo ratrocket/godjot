@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/ratrocket/godjot/tokenizer"
+	"md0.org/djot/tokenizer"
 )
 
 type HtmlWriter struct {

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ratrocket/godjot/djot_tokenizer"
+	"md0.org/djot/djot_tokenizer"
 )
 
 func seedFuzz(f *testing.F) {

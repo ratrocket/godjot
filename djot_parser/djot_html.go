@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ratrocket/godjot/djot_tokenizer"
-	"github.com/ratrocket/godjot/html_writer"
-	"github.com/ratrocket/godjot/tokenizer"
+	"md0.org/djot/djot_tokenizer"
+	"md0.org/djot/html_writer"
+	"md0.org/djot/tokenizer"
 )
 
 type (

@@ -3,7 +3,7 @@ package tokenizer
 import (
 	"testing"
 
-	"github.com/ratrocket/godjot/internal/testx"
+	"md0.org/djot/internal/testx"
 )
 
 // What is this even testing??  AND it failed when I forked the repo; I

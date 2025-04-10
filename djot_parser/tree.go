@@ -1,6 +1,6 @@
 package djot_parser
 
-import "github.com/ratrocket/godjot/tokenizer"
+import "md0.org/djot/tokenizer"
 
 type TreeNode[T ~int] struct {
 	Type       T
