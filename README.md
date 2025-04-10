@@ -9,7 +9,8 @@ This is my fork of
 [sivukhin/godjot](https://github.com/sivukhin/godjot).  I removed
 testify, ripped out all the CI stuff, took out something about "idea"
 (an IDE?), altered the Makefile to my liking, etc, etc.  See commit
-0016b84a41c5b3591f9d56e792f318285ed363e7 for my initial changes.
+[0016b8](https://git.sr.ht/~md0/djot/commit/0016b84a41c5b3591f9d56e792f318285ed363e7)
+for my initial changes.
 
 > If you've stumbled upon this repo, note that the authoritative version
 > is on [sourcehut](https://git.sr.ht/~md0/djot).  The [github
