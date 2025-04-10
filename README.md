@@ -11,12 +11,15 @@ testify, ripped out all the CI stuff, took out something about "idea"
 (an IDE?), altered the Makefile to my liking, etc, etc.  See commit
 0016b84a41c5b3591f9d56e792f318285ed363e7 for my initial changes.
 
-<aside>
-If you've stumbled upon this repo, note that the authoritative version
-is on [sourcehut](https://git.sr.ht/~md0/djot).  The [github
-repo](https://github.com/ratrocket/godjot) is a mirror and may (will)
-lag behind.
-</aside>
+> If you've stumbled upon this repo, note that the authoritative version
+> is on [sourcehut](https://git.sr.ht/~md0/djot).  The [github
+> repo](https://github.com/ratrocket/godjot) is a mirror and may (will)
+> lag behind.
+>
+> The "base name" of the module module changed from "godjot" to "djot"
+> (I get needing to disambiguate names in the global namespace of *ALL
+> THINGS*, but I can't stand the naming convention of `gothing`, or
+> worse, `go-thing`).
 
 I'm evaluating if I can use this library as the basis for my own
 djot'ing.  I've used [jotdown](https://github.com/hellux/jotdown) (also
@@ -35,10 +38,6 @@ work in go.  So... jotdown seems like the closest / most approachable
 library to what I want, but I'm not switching to rust.  So I'm going to
 evaluate if *this* library (rather, my fork of it) is up to the task.
 If not I'll change tack.
-
-This fork will probably migrate over to sourcehut soon-ish and the
-module will become md0.org/djot (I can't stand the naming convention of
-`gothing`, or worse, `go-thing`).
 
 I'll (try to, haha) update this README as things change.  *For now* what
 follows is from the original repo (except for `s/sivukhin/ratrocket`).
