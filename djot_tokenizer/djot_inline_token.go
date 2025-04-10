@@ -35,7 +35,16 @@ func matchInlineToken(
 	s tokenizer.ReaderState,
 	tokenType DjotToken,
 ) (tokenizer.ReaderState, bool) {
-	fail := func() (tokenizer.ReaderState, bool) { return 0, false }
+	fail := func() (tokenizer.ReaderState, bool) {
+		return 0, false
+	}
+
+	var (
+		asciiNext int
+		next      int
+		word      int
+		ok        bool
+	)
 
 	switch tokenType {
 	case RawFormatInline:
@@ -44,7 +53,7 @@ func matchInlineToken(
 		return r.Token1(s, [...]byte{'}'})
 
 	case VerbatimInline:
-		next, ok := r.MaskRepeat(s, DollarByteMask, 0)
+		next, ok = r.MaskRepeat(s, DollarByteMask, 0)
 		tokenizer.Assertf(ok, "MaskRepeat must match because minCount is zero")
 		// $ - inline math, $$ - display math, more dollars - unknown syntax
 		if next-s > 2 {
@@ -72,48 +81,48 @@ func matchInlineToken(
 	case AutolinkInline ^ tokenizer.Open:
 		return r.Token1(s, [...]byte{'>'})
 	case EscapedSymbolInline:
-		next, ok := r.Token1(s, [...]byte{'\\'})
+		next, ok = r.Token1(s, [...]byte{'\\'})
 		if !ok {
 			return fail()
 		}
 		if r.IsEmpty(next) {
 			return fail()
 		}
-		if asciiNext, ok := r.Mask(next, AsciiPunctuationSymbolByteMask); ok {
+		if asciiNext, ok = r.Mask(next, AsciiPunctuationSymbolByteMask); ok {
 			return asciiNext, ok
 		}
 		next, ok = r.MaskRepeat(next, tokenizer.SpaceByteMask, 0)
 		tokenizer.Assertf(ok, "MaskRepeat must match because minCount is zero")
 		return r.Token1(next, [...]byte{'\n'})
 	case EmphasisInline:
-		if next, ok := r.Token2(s, [...]byte{'{', '_'}); ok {
+		if next, ok = r.Token2(s, [...]byte{'{', '_'}); ok {
 			return next, ok
 		}
-		if next, ok := r.Token1(s, [...]byte{'_'}); ok && !r.HasMask(next, tokenizer.SpaceNewLineByteMask) && !r.HasToken1(next, [...]byte{'}'}) {
+		if next, ok = r.Token1(s, [...]byte{'_'}); ok && !r.HasMask(next, tokenizer.SpaceNewLineByteMask) && !r.HasToken1(next, [...]byte{'}'}) {
 			return next, ok
 		}
 		return fail()
 	case EmphasisInline ^ tokenizer.Open:
-		if next, ok := r.Token2(s, [...]byte{'_', '}'}); ok {
+		if next, ok = r.Token2(s, [...]byte{'_', '}'}); ok {
 			return next, ok
 		}
-		if next, ok := r.Token1(s, [...]byte{'_'}); ok && s > 0 && !r.HasMask(s-1, tokenizer.SpaceNewLineByteMask) {
+		if next, ok = r.Token1(s, [...]byte{'_'}); ok && s > 0 && !r.HasMask(s-1, tokenizer.SpaceNewLineByteMask) {
 			return next, ok
 		}
 		return fail()
 	case StrongInline:
-		if next, ok := r.Token2(s, [...]byte{'{', '*'}); ok {
+		if next, ok = r.Token2(s, [...]byte{'{', '*'}); ok {
 			return next, ok
 		}
-		if next, ok := r.Token1(s, [...]byte{'*'}); ok && !r.HasMask(next, tokenizer.SpaceNewLineByteMask) && !r.HasToken1(next, [...]byte{'}'}) {
+		if next, ok = r.Token1(s, [...]byte{'*'}); ok && !r.HasMask(next, tokenizer.SpaceNewLineByteMask) && !r.HasToken1(next, [...]byte{'}'}) {
 			return next, ok
 		}
 		return fail()
 	case StrongInline ^ tokenizer.Open:
-		if next, ok := r.Token2(s, [...]byte{'*', '}'}); ok {
+		if next, ok = r.Token2(s, [...]byte{'*', '}'}); ok {
 			return next, ok
 		}
-		if next, ok := r.Token1(s, [...]byte{'*'}); ok && s > 0 && !r.HasMask(s-1, tokenizer.SpaceNewLineByteMask) {
+		if next, ok = r.Token1(s, [...]byte{'*'}); ok && s > 0 && !r.HasMask(s-1, tokenizer.SpaceNewLineByteMask) {
 			return next, ok
 		}
 		return fail()
@@ -122,34 +131,34 @@ func matchInlineToken(
 	case HighlightedInline ^ tokenizer.Open:
 		return r.Token2(s, [...]byte{'=', '}'})
 	case SubscriptInline:
-		if next, ok := r.Token2(s, [...]byte{'{', '~'}); ok {
+		if next, ok = r.Token2(s, [...]byte{'{', '~'}); ok {
 			return next, ok
 		}
-		if next, ok := r.Token1(s, [...]byte{'~'}); ok && !r.HasMask(next, tokenizer.SpaceNewLineByteMask) && !r.HasToken1(next, [...]byte{'}'}) {
+		if next, ok = r.Token1(s, [...]byte{'~'}); ok && !r.HasMask(next, tokenizer.SpaceNewLineByteMask) && !r.HasToken1(next, [...]byte{'}'}) {
 			return next, ok
 		}
 		return fail()
 	case SubscriptInline ^ tokenizer.Open:
-		if next, ok := r.Token2(s, [...]byte{'~', '}'}); ok {
+		if next, ok = r.Token2(s, [...]byte{'~', '}'}); ok {
 			return next, ok
 		}
-		if next, ok := r.Token1(s, [...]byte{'~'}); ok && s > 0 && !r.HasMask(s-1, tokenizer.SpaceNewLineByteMask) {
+		if next, ok = r.Token1(s, [...]byte{'~'}); ok && s > 0 && !r.HasMask(s-1, tokenizer.SpaceNewLineByteMask) {
 			return next, ok
 		}
 		return fail()
 	case SuperscriptInline:
-		if next, ok := r.Token2(s, [...]byte{'{', '^'}); ok {
+		if next, ok = r.Token2(s, [...]byte{'{', '^'}); ok {
 			return next, ok
 		}
-		if next, ok := r.Token1(s, [...]byte{'^'}); ok && !r.HasMask(next, tokenizer.SpaceNewLineByteMask) && !r.HasToken1(next, [...]byte{'}'}) {
+		if next, ok = r.Token1(s, [...]byte{'^'}); ok && !r.HasMask(next, tokenizer.SpaceNewLineByteMask) && !r.HasToken1(next, [...]byte{'}'}) {
 			return next, ok
 		}
 		return fail()
 	case SuperscriptInline ^ tokenizer.Open:
-		if next, ok := r.Token2(s, [...]byte{'^', '}'}); ok {
+		if next, ok = r.Token2(s, [...]byte{'^', '}'}); ok {
 			return next, ok
 		}
-		if next, ok := r.Token1(s, [...]byte{'^'}); ok && s > 0 && !r.HasMask(s-1, tokenizer.SpaceNewLineByteMask) {
+		if next, ok = r.Token1(s, [...]byte{'^'}); ok && s > 0 && !r.HasMask(s-1, tokenizer.SpaceNewLineByteMask) {
 			return next, ok
 		}
 		return fail()
@@ -166,27 +175,27 @@ func matchInlineToken(
 	case FootnoteReferenceInline ^ tokenizer.Open:
 		return r.Token1(s, [...]byte{']'})
 	case SymbolsInline:
-		next, ok := r.Token1(s, [...]byte{':'})
+		next, ok = r.Token1(s, [...]byte{':'})
 		if !ok {
 			return fail()
 		}
-		if word, ok := r.MaskRepeat(next, AlphaNumericSymbolByteMask, 0); ok && r.HasToken1(word, [...]byte{':'}) {
+		if word, ok = r.MaskRepeat(next, AlphaNumericSymbolByteMask, 0); ok && r.HasToken1(word, [...]byte{':'}) {
 			return next, true
 		}
 		return fail()
 	case SymbolsInline ^ tokenizer.Open:
 		return r.Token1(s, [...]byte{':'})
 	case PipeTableSeparator:
-		next, ok := r.Token1(s, [...]byte{'|'})
+		next, ok = r.Token1(s, [...]byte{'|'})
 		if !ok {
 			return fail()
 		}
 		return r.MaskRepeat(next, tokenizer.SpaceByteMask, 0)
 	case PipeTableSeparator ^ tokenizer.Open:
-		s, ok := r.MaskRepeat(s, tokenizer.SpaceByteMask, 0)
+		s, ok = r.MaskRepeat(s, tokenizer.SpaceByteMask, 0)
 		tokenizer.Assertf(ok, "MaskRepeat must match because minCount is zero")
 
-		if next, ok := r.Token1(s, [...]byte{'|'}); ok {
+		if next, ok = r.Token1(s, [...]byte{'|'}); ok {
 			if r.IsEmptyOrWhiteSpace(next) {
 				return next, true
 			}
@@ -194,19 +203,19 @@ func matchInlineToken(
 		}
 		return fail()
 	case SmartSymbolInline:
-		if next, ok := r.Token1(s, [...]byte{'{'}); ok {
+		if next, ok = r.Token1(s, [...]byte{'{'}); ok {
 			return r.Mask(next, SmartSymbolByteMask)
 		}
-		if next, ok := r.Mask(s, SmartSymbolByteMask); ok {
+		if next, ok = r.Mask(s, SmartSymbolByteMask); ok {
 			if r.HasToken1(next, [...]byte{'}'}) {
 				return next + 1, true
 			}
 			return next, true
 		}
-		if next, ok := r.Token3(s, [...]byte{'.', '.', '.'}); ok {
+		if next, ok = r.Token3(s, [...]byte{'.', '.', '.'}); ok {
 			return next, ok
 		}
-		if next, ok := r.ByteRepeat(s, '-', 2); ok {
+		if next, ok = r.ByteRepeat(s, '-', 2); ok {
 			return next, ok
 		}
 		return fail()

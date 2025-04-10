@@ -6,6 +6,8 @@ import (
 	"md0.org/djot/internal/testx"
 )
 
+// TODO
+//
 // What is this even testing??  AND it failed when I forked the repo; I
 // edited the anonymous function to... ummm.... panic.
 //

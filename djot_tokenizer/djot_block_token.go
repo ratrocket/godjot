@@ -34,7 +34,12 @@ func MatchBlockToken(
 		return token, state, true
 	}
 
-	var ok bool
+	var (
+		end    int
+		simple int
+		ending int
+		ok     bool
+	)
 
 	initialState, ok = r.MaskRepeat(initialState, tokenizer.SpaceByteMask, 0)
 	tokenizer.Assertf(ok, "MaskRepeat must match because minCount is zero")
@@ -76,7 +81,7 @@ func MatchBlockToken(
 
 		next, ok = r.MaskRepeat(next, tokenizer.SpaceByteMask, 0)
 		tokenizer.Assertf(ok, "MaskRepeat must match because minCount is zero")
-		if end, ok := r.EmptyOrWhiteSpace(next); ok {
+		if end, ok = r.EmptyOrWhiteSpace(next); ok {
 			return success(tokenizer.Token[DjotToken]{Type: tokenType, Start: initialState, End: end}, end)
 		}
 
@@ -144,7 +149,7 @@ func MatchBlockToken(
 		return success(tokenizer.Token[DjotToken]{Type: tokenType, Start: initialState, End: next}, next)
 	case ListItemBlock:
 		for _, simpleToken := range [...]string{"- [ ] ", "- [x] ", "- [X] ", "+ ", "* ", "- ", ": "} {
-			if simple, ok := r.Token(next, simpleToken); ok {
+			if simple, ok = r.Token(next, simpleToken); ok {
 				return success(tokenizer.Token[DjotToken]{Type: tokenType, Start: initialState, End: simple}, simple)
 			}
 		}
@@ -159,9 +164,9 @@ func MatchBlockToken(
 			if complexNext, ok = r.MaskRepeat(complexNext, complexTokenMask, 1); !ok {
 				continue
 			}
-			if ending, ok := r.Token(complexNext, ") "); ok {
+			if ending, ok = r.Token(complexNext, ") "); ok {
 				return success(tokenizer.Token[DjotToken]{Type: tokenType, Start: initialState, End: ending}, ending)
-			} else if ending, ok := r.Token(complexNext, ". "); ok && !parenOk {
+			} else if ending, ok = r.Token(complexNext, ". "); ok && !parenOk {
 				return success(tokenizer.Token[DjotToken]{Type: tokenType, Start: initialState, End: ending}, ending)
 			}
 		}

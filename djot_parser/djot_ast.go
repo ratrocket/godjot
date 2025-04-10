@@ -505,10 +505,7 @@ func buildDjotAst(
 			case djot_tokenizer.HeadingBlock:
 				level := string(bytes.TrimSuffix(document[openToken.Start:openToken.End], []byte(" ")))
 				pop := 0
-				for {
-					if len(groupElements) == 0 {
-						break
-					}
+				for len(groupElements) > 0 {
 					last := groupElements[len(groupElements)-1]
 					if last.Type == HeadingNode && len(last.Attributes.Get(HeadingLevelKey)) < len(level) {
 						break
@@ -732,7 +729,7 @@ func buildDjotAst(
 				if nextI < len(list) {
 					nextToken = list[nextI]
 				}
-				// todo (ratrocket, 2023-11-19): replicate this logic in regular link and make it less awful!
+				// TODO (sivukhin, 2023-11-19): replicate this logic in regular link and make it less awful!
 				attributesAfter := 0
 				if nextToken.Type != djot_tokenizer.None {
 					for {
@@ -744,7 +741,8 @@ func buildDjotAst(
 						attributesAfter++
 					}
 				}
-				if nextToken.Type == djot_tokenizer.LinkUrlInline {
+				switch nextToken.Type {
+				case djot_tokenizer.LinkUrlInline:
 					attributes.Set(ImgAltKey, string(selectText(document, list[i+1:i+openToken.JumpToPair])))
 					attributes.Set(ImgSrcKey, string(normalizeLinkText(document[nextToken.End:list[nextI+nextToken.JumpToPair].Start])))
 					*nodesRef = append(*nodesRef, TreeNode[DjotNode]{
@@ -752,7 +750,7 @@ func buildDjotAst(
 						Attributes: attributes,
 					})
 					nextI += nextToken.JumpToPair + 1
-				} else if nextToken.Type == djot_tokenizer.LinkReferenceInline {
+				case djot_tokenizer.LinkReferenceInline:
 					reference := normalizeLinkText(document[nextToken.End:list[nextI+nextToken.JumpToPair].Start])
 					if len(reference) == 0 {
 						reference = selectText(document, list[i+1:i+openToken.JumpToPair])
@@ -767,7 +765,7 @@ func buildDjotAst(
 						Attributes: attributes,
 					})
 					nextI += nextToken.JumpToPair + 1
-				} else {
+				default:
 					*nodesRef = append(*nodesRef, TreeNode[DjotNode]{
 						Type: TextNode,
 						Text: textBytes,

@@ -40,12 +40,24 @@ func MatchQuotedString(r tokenizer.TextReader, s tokenizer.ReaderState) ([]byte,
 }
 
 func MatchDjotAttribute(r tokenizer.TextReader, s tokenizer.ReaderState) (tokenizer.Attributes, tokenizer.ReaderState, bool) {
-	fail := func() (tokenizer.Attributes, tokenizer.ReaderState, bool) { return tokenizer.Attributes{}, 0, false }
+	fail := func() (tokenizer.Attributes, tokenizer.ReaderState, bool) {
+		return tokenizer.Attributes{}, 0, false
+	}
 
-	next, ok := r.Token(s, "{")
+	var (
+		next         int
+		commentStart int
+		attributeEnd int
+		classToken   int
+		idToken      int
+		ok           bool
+	)
+
+	next, ok = r.Token(s, "{")
 	if !ok {
 		return fail()
 	}
+
 	var attributes tokenizer.Attributes
 	comment := false
 	for {
@@ -55,7 +67,7 @@ func MatchDjotAttribute(r tokenizer.TextReader, s tokenizer.ReaderState) (tokeni
 		if r.IsEmpty(next) {
 			return fail()
 		}
-		if commentStart, ok := r.Token(next, "%"); ok {
+		if commentStart, ok = r.Token(next, "%"); ok {
 			if comment {
 				comment = false
 			} else {
@@ -68,17 +80,17 @@ func MatchDjotAttribute(r tokenizer.TextReader, s tokenizer.ReaderState) (tokeni
 			next++
 			continue
 		}
-		if attributeEnd, ok := r.Token(next, "}"); ok {
+		if attributeEnd, ok = r.Token(next, "}"); ok {
 			return attributes, attributeEnd, true
 		}
-		if classToken, ok := r.Token(next, "."); ok {
+		if classToken, ok = r.Token(next, "."); ok {
 			if next, ok = r.MaskRepeat(classToken, AttributeTokenMask, 1); !ok {
 				return fail()
 			}
 			className := r.Select(classToken, next)
 			attributes.Append(DjotAttributeClassKey, className)
 			continue
-		} else if idToken, ok := r.Token(next, "#"); ok {
+		} else if idToken, ok = r.Token(next, "#"); ok {
 			if next, ok = r.MaskRepeat(idToken, AttributeTokenMask, 1); !ok {
 				return fail()
 			}
